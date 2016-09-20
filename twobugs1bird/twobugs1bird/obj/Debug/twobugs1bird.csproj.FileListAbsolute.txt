@@ -1,0 +1,9 @@
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\bin\Debug\twobugs1bird.exe.config
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\bin\Debug\twobugs1bird.exe
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\bin\Debug\twobugs1bird.pdb
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.csprojResolveAssemblyReference.cache
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.Form1.resources
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.Properties.Resources.resources
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.csproj.GenerateResource.Cache
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.exe
+c:\users\g7640\documents\visual studio 2015\Projects\twobugs1bird\twobugs1bird\obj\Debug\twobugs1bird.pdb
