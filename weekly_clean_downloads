@@ -1,0 +1,28 @@
+namespace weekly_clean_downloads
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // "/C" Carries out the command specified by string and then terminates
+            string cmd1 = "/C del /q C:\\Users\\username\\Downloads\\*";
+            string cmd2 = "/C for /d %p in (C:\\Users\\username\\Downloads\\*.*) do rmdir %p /s /q";
+
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            //hiding dos windows
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+            startInfo.FileName = "cmd.exe";
+
+            startInfo.Arguments = cmd1;
+            p.StartInfo = startInfo;
+            p.Start();
+
+            startInfo.Arguments = cmd2;
+            p.StartInfo = startInfo;
+            p.Start();
+            
+        }
+    }
+}
