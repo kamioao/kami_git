@@ -10,7 +10,7 @@ namespace weekly_clean_downloads
 
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            //hiding dos windows
+            //hiding dos window
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 
             startInfo.FileName = "cmd.exe";
@@ -22,6 +22,7 @@ namespace weekly_clean_downloads
             startInfo.Arguments = cmd2;
             p.StartInfo = startInfo;
             p.Start();
+            p.WaitForExit();
             
         }
     }
