@@ -1,0 +1,36 @@
+    public static class EPPlus
+    {
+        public static DataTable ToDataTable(this ExcelPackage package)
+        {
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
+            DataTable dt = new DataTable();
+
+            ExcelCellAddress startCell = worksheet.Dimension.Start;
+            ExcelCellAddress endCell = worksheet.Dimension.End;
+
+            //creat all the needed DataColumn
+            //first row is column name
+            for (int col = startCell.Column; col <= endCell.Column; col++)
+                dt.Columns.Add(worksheet.Cells[1, col].Value.ToString());
+
+            //place all the data into DataTable
+            for (int row = 2; row <= endCell.Row; row++)
+            {
+                ExcelRange range = worksheet.Cells[row, startCell.Column, row, endCell.Column];
+
+                if (range.Any(c => !string.IsNullOrEmpty(c.Text)) == false)
+                {
+                    continue; //if row is null or empty, pass this row
+                }
+
+                DataRow dr = dt.NewRow();
+                for (int col = startCell.Column; col <= endCell.Column; col++)
+                {
+                    //DataTable's column start with 0
+                    dr[col - 1] = Convert.ToString(worksheet.Cells[row, col].Value);
+                }
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
+    }
