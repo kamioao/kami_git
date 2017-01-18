@@ -1,0 +1,14 @@
+(Client)
+<script src="../Scripts/jquery-fileDownload.js"></script>
+<script src="../Scripts/jquery.blockUI.js"></script>
+(OnClientClick)
+$.blockUI({css:{border: 'none',padding: '15px',backgroundColor: '#000','-webkit-border-radius': '10px','-moz-border-radius': '10px',opacity:.5,color: '#fff'}}); $.fileDownload($(this)).done(function () { $.unblockUI(); })"
+
+(server)
+HttpContext.Current.Response.SetCookie(new HttpCookie("fileDownload", "true") { Path = "/" });
+
+ref.
+http://johnculviner.com/jquery-file-download-plugin-for-ajax-like-feature-rich-file-downloads/
+
+2017/01/18
+use on TestPlanOut page
