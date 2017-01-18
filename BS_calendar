@@ -1,0 +1,33 @@
+    (Clinet)
+    <link href="../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <script src="../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-TW.js"></script>
+    
+    (Html)
+    <div class="container">
+        <div class="starter-template">
+            <asp:Literal ID="Literal1" runat="server" Visible="False"></asp:Literal>
+        </div>
+        <label for="tb_Day_Start" class="col-md-2 control-label">Start Day</label>
+        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy/mm/dd" data-link-field="tb_Day_Start" data-link-format="yyyymmdd">
+            <input class="form-control" size="16" type="text" value="" readonly="true" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+        <input type="hidden" id="tb_Day_Start" name="tb_Day_Start" /><br />
+
+        <label for="tb_Day_Delegate" class="col-md-2 control-label">Delegate Day </label>
+        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy/mm/dd" data-link-field="tb_Day_Delegate" data-link-format="yyyymmdd">
+            <input class="form-control" size="16" type="text" value="" readonly="true" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+        <input type="hidden" id="tb_Day_Delegate" name="tb_Day_Delegate" /><br />
+    </div>
+    
+    (Server)
+    //get date value from hideen input object
+    string now = Request.Form["tb_Day_Start"];
+    string dele_gate = Request.Form["tb_Day_Delegate"];
+    
+    2017/01/18 use on testing plan out
