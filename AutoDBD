@@ -1,0 +1,83 @@
+namespace AutoDBD
+{
+    public partial class Form1 : System.Windows.Forms.Form
+    {
+        private IE _IE;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            textBox1.Text = "開始訂便當...";
+            _IE = new IE();
+            //_IE.ShowWindow(WatiN.Core.Native.Windows.NativeMethods.WindowShowStyle.Hide);
+
+            _IE.GoTo("URL");
+            //_IE.WaitForComplete();
+            _IE.TextField("txtUser").TypeText("USER");
+            //_IE.TextField(Find.ByName("txtPassword")).TypeText("PASSWORD");
+            SendKeys.SendWait("~");
+            _IE.WaitForComplete();
+
+            string date = System.DateTime.Now.AddDays(4).ToString("yyyy/MM/dd");          
+
+            _IE.Link("ctl00_HyperLink6").Click();
+            _IE.WaitForComplete();
+            _IE.Link("ctl00_ContentPlaceHolder1_HyperLink2").Click();
+            _IE.WaitForComplete();
+            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpOrderDate").Option(date).Select();
+            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpMealType").Option("中餐(Lunch)").Select();
+
+            AlertDialogHandler ald = new AlertDialogHandler();
+            //UseDialogOnce w =  new UseDialogOnce(_IE.DialogWatcher, ald);
+            using (new UseDialogOnce(_IE.DialogWatcher, ald))
+            {
+                _IE.Link(Find.ByUrl("javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridProduct','Select$4')")).ClickNoWait();
+                //ald.
+                Thread.Sleep(1000);
+                //ald.WaitUntilExists();
+                if (ald.Exists())
+                {                    
+                    ald.OKButton.Click();
+                    textBox1.Text = "訂購失敗!便當額滿了!!";
+                    return;
+                }                            
+            }
+
+            _IE.WaitForComplete();
+            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpPlace").Option("K10").Select();           
+
+            ConfirmDialogHandler confirm = new ConfirmDialogHandler();
+            AlertDialogHandler ald2 = new AlertDialogHandler();
+            using (new UseDialogOnce(_IE.DialogWatcher, confirm))
+            {
+                using (new UseDialogOnce(_IE.DialogWatcher, ald2))
+                {
+                    _IE.Button("ctl00_ContentPlaceHolder1_cmdOrder").ClickNoWait();
+                    //Thread.Sleep(1000);
+                    confirm.WaitUntilExists();                    
+                    confirm.OKButton.Click();
+                    Thread.Sleep(1000);
+                    //ald.WaitUntilExists();
+                    if (ald2.Exists())
+                    {                        
+                        ald2.OKButton.Click();
+                        textBox1.Text = "訂購失敗!重複訂購!!";
+                        return;
+                    }
+                    else
+                    {
+                        _IE.WaitForComplete();
+                        textBox1.Text = "訂購完成!";
+                    }
+                }                   
+            }
+            //_IE.WaitForComplete();
+            //_IE.Button("ctl00_btnLogout").Click();
+            Application.Exit();
+        }
+    }
+}
