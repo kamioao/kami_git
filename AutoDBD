@@ -9,74 +9,130 @@ namespace AutoDBD
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void button1_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "開始訂便當...";
-            _IE = new IE();
-            //_IE.ShowWindow(WatiN.Core.Native.Windows.NativeMethods.WindowShowStyle.Hide);
-
-            _IE.GoTo("URL");
-            //_IE.WaitForComplete();
-            _IE.TextField("txtUser").TypeText("USER");
-            //_IE.TextField(Find.ByName("txtPassword")).TypeText("PASSWORD");
-            SendKeys.SendWait("~");
-            _IE.WaitForComplete();
-
             string date = System.DateTime.Now.AddDays(4).ToString("yyyy/MM/dd");          
+            //string date = "2017/01/24";
+
+            textBox1.Text = string.Format("開始訂購{0}的便當...", date);
+            _IE.GoTo("http://khwfap0.kh.asegroup.com/MealOrder/Login.aspx?ReturnUrl=%2fMealOrder");
+            //_IE.WaitForComplete();
+            _IE.TextField("txtUser").TypeText("username");
+            _IE.TextField(Find.ByName("txtPassword")).TypeText("password");
+            _IE.Button("Confirm").Click();
+            _IE.WaitForComplete();
 
             _IE.Link("ctl00_HyperLink6").Click();
             _IE.WaitForComplete();
             _IE.Link("ctl00_ContentPlaceHolder1_HyperLink2").Click();
             _IE.WaitForComplete();
-            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpOrderDate").Option(date).Select();
-            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpMealType").Option("中餐(Lunch)").Select();
+
+            try
+            {
+                _IE.SelectList("ctl00_ContentPlaceHolder1_DrpOrderDate").Option(date).WaitUntilExists();
+                _IE.SelectList("ctl00_ContentPlaceHolder1_DrpOrderDate").Option(date).Select();
+            }
+            catch
+            {
+                textBox1.Text += "訂購失敗!該日期尚未開放訂購!!";
+                return;
+            }
+            
+
+            try
+            {
+                _IE.SelectList("ctl00_ContentPlaceHolder1_DrpMealType").Option("中餐(Lunch)").WaitUntilExists();
+                _IE.SelectList("ctl00_ContentPlaceHolder1_DrpMealType").Option("中餐(Lunch)").Select();
+            }
+            catch
+            {
+                textBox1.Text += "訂購失敗!沒有中餐選項!!";
+                return;
+            }
+            
 
             AlertDialogHandler ald = new AlertDialogHandler();
-            //UseDialogOnce w =  new UseDialogOnce(_IE.DialogWatcher, ald);
             using (new UseDialogOnce(_IE.DialogWatcher, ald))
             {
-                _IE.Link(Find.ByUrl("javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridProduct','Select$4')")).ClickNoWait();
-                //ald.
-                Thread.Sleep(1000);
-                //ald.WaitUntilExists();
-                if (ald.Exists())
-                {                    
-                    ald.OKButton.Click();
-                    textBox1.Text = "訂購失敗!便當額滿了!!";
+                try
+                {
+                    _IE.Link(Find.ByUrl("javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridProduct','Select$5')")).WaitUntilExists();
+                    _IE.Link(Find.ByUrl("javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridProduct','Select$5')")).ClickNoWait();
+                }
+                catch {
+                    textBox1.Text += "\r\n訂購失敗!沒有總宴選項!!";
                     return;
-                }                            
+                }                
+
+
+                try
+                {
+                    ald.WaitUntilExists(1);
+                    ald.OKButton.Click();
+                    textBox1.Text += "\r\n訂購失敗!便當額滿了!!";
+                    return;
+                }
+                catch
+                {
+                    _IE.RemoveDialogHandler(ald);
+                }
             }
 
             _IE.WaitForComplete();
-            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpPlace").Option("K10").Select();           
+            _IE.SelectList("ctl00_ContentPlaceHolder1_DrpPlace").Option("K10").Select();
 
             ConfirmDialogHandler confirm = new ConfirmDialogHandler();
-            AlertDialogHandler ald2 = new AlertDialogHandler();
             using (new UseDialogOnce(_IE.DialogWatcher, confirm))
             {
-                using (new UseDialogOnce(_IE.DialogWatcher, ald2))
+
+                _IE.Button("ctl00_ContentPlaceHolder1_cmdOrder").ClickNoWait();
+                confirm.WaitUntilExists();
+                confirm.OKButton.Click();
+
+                try
                 {
-                    _IE.Button("ctl00_ContentPlaceHolder1_cmdOrder").ClickNoWait();
-                    //Thread.Sleep(1000);
-                    confirm.WaitUntilExists();                    
-                    confirm.OKButton.Click();
-                    Thread.Sleep(1000);
-                    //ald.WaitUntilExists();
-                    if (ald2.Exists())
-                    {                        
-                        ald2.OKButton.Click();
-                        textBox1.Text = "訂購失敗!重複訂購!!";
-                        return;
-                    }
-                    else
-                    {
-                        _IE.WaitForComplete();
-                        textBox1.Text = "訂購完成!";
-                    }
-                }                   
+                    //_IE.WaitForComplete();
+                    _IE.Span("ctl00_ContentPlaceHolder1_lblOrderMsg").WaitUntilExists();
+                    SendKeys.Send("{TAB}");
+                    SendKeys.Send("~");
+                    textBox1.Text += "\r\n訂購失敗!重複訂購!!";
+
+                    //return;
+                }
+                catch
+                {
+                    _IE.WaitForComplete();
+                    textBox1.Text += "\r\n訂購完成!";
+                    //SendKeys.Send("~");
+                }
             }
-            //_IE.WaitForComplete();
-            //_IE.Button("ctl00_btnLogout").Click();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            for(int i = 1; i<5;i++)
+            {
+                try
+                {
+                    _IE = new IE();
+                    //_IE.ShowWindow(WatiN.Core.Native.Windows.NativeMethods.WindowShowStyle.Hide);
+                    button1_Click(null, null);
+                    break;
+                }
+                catch
+                {
+                    textBox1.Text += string.Format("\r\n瀏覽器開啟失敗!正在重試...({0})", i);
+                    if (i == 5)
+                    {
+                        textBox1.Text += "\r\n訂購失敗!瀏覽器無法開啟!!";
+                    }
+                }
+            }
+
+            File.WriteAllText(@"path, textBox1.Text);
+            _IE.Close();
             Application.Exit();
         }
     }
