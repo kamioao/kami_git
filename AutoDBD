@@ -16,7 +16,7 @@ namespace AutoDBD
             //string date = "2017/01/24";
 
             textBox1.Text = string.Format("開始訂購{0}的便當...", date);
-            _IE.GoTo("http://khwfap0.kh.asegroup.com/MealOrder/Login.aspx?ReturnUrl=%2fMealOrder");
+            _IE.GoTo("url");
             //_IE.WaitForComplete();
             _IE.TextField("txtUser").TypeText("username");
             _IE.TextField(Find.ByName("txtPassword")).TypeText("password");
